@@ -19,6 +19,7 @@
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/string.hpp>
+#include "std_msgs/msg/int32.hpp"
 
 namespace autoware::pose_covariance_modifier
 {
@@ -61,6 +62,7 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr
     pub_pose_with_covariance_stamped_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_str_pose_source_;
+  rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr pub_pose_source_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_double_ndt_position_stddev_;
   rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_double_gnss_position_stddev_;
 

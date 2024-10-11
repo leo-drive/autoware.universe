@@ -20,6 +20,7 @@
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/string.hpp>
+#include "std_msgs/msg/int32.hpp"
 
 namespace autoware::pose_covariance_modifier
 {
@@ -61,6 +62,7 @@ PoseCovarianceModifierNode::PoseCovarianceModifierNode(const rclcpp::NodeOptions
       "output_pose_with_covariance_topic", 10);
 
   pub_str_pose_source_ = this->create_publisher<std_msgs::msg::String>("~/selected_pose_type", 10);
+  pub_pose_source_ = this->create_publisher<std_msgs::msg::Int32>("~/selected_pose_type_int", 10);
 
   if (debug_mode_) {
     pub_double_ndt_position_stddev_ =
@@ -223,21 +225,27 @@ std::array<double, 36> PoseCovarianceModifierNode::update_ndt_covariances_from_g
 void PoseCovarianceModifierNode::publish_pose_type(const PoseSource & pose_source)
 {
   std_msgs::msg::String selected_pose_type;
+  std_msgs::msg::Int32 selected_pose_type_int;
   switch (pose_source) {
     case PoseSource::GNSS:
       selected_pose_type.data = "GNSS";
+      selected_pose_type_int.data = 0;
       break;
     case PoseSource::GNSS_NDT:
       selected_pose_type.data = "GNSS_NDT";
+      selected_pose_type_int.data = 1;
       break;
     case PoseSource::NDT:
       selected_pose_type.data = "NDT";
+      selected_pose_type_int.data = 2;
       break;
     default:
       selected_pose_type.data = "NOT_DEFINED";
+        selected_pose_type_int.data = -1;
       break;
   }
   pub_str_pose_source_->publish(selected_pose_type);
+  pub_pose_source_->publish(selected_pose_type_int);
 }
 
 }  // namespace autoware::pose_covariance_modifier
